@@ -1,0 +1,3 @@
+start cnpm install babel-polyfill babel-plugin-syntax-dynamic-import mysql body-parser axios express-session captchapng webpack-merge element-ui vuex  style-loader file-loader url-loader element-ui vue-router webpack-dev-middleware webpack vue-template-compiler  vue-loader vue-html-loader css-loader vue-style-loader vue-hot-reload-api babel-loader babel-core babel-plugin-transform-runtime babel-preset-env babel-runtime@5 express vue-router vue-resource webpack-dev-middleware webpack-hot-middleware html-webpack-plugin --save-dev
+REM start cnpm install velocity-animate mysql vue --save
+REM start cnpm install eslint vue-cli -g

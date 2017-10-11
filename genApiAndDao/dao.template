@@ -1,0 +1,353 @@
+/**
+ * author:{__AUTHOR__}
+ * data:{__TIME__}
+ * dao的模板
+ */
+"use strict"
+var mysql = require('mysql')
+
+var db = require('{__DB_CONFIG_PATH__}')
+
+var Sys{__TABLE_ALIAS_NAME__}Service = {}
+
+var pool = mysql.createPool(db)
+
+var includeList = {__FIELD_ARRAY_TO_STRING__}
+
+var fields = {__FIELD_ARRAY__}
+
+var uuid = require('uuid');
+//查
+
+//判断是否需要递归
+{__IF_RECURISION__}//需要递归
+function selectOne(condition) {
+	return new Promise(function (resolve, reject) {
+		pool.getConnection(function (err, connection) {
+			if (err) {
+				throw err
+			}
+			var valStr = 'select ' + includeList + ' from {__TABLE_NAME__}  where 10086=10086 '
+			for (var key in condition) {
+				if (fields.indexOf(key) != -1 && condition[key]) {
+					valStr += ` and ${connection.escapeId(key)} = ${connection.escape(condition[key])}`;
+				}
+			}
+			if (condition['keyword'] && condition['field']) {
+				valStr += ` and  instr(${connection.escapeId(condition['field'])},${connection.escape(condition['keyword'])})`
+			}
+			
+
+			if (condition['orderField']) {
+				valStr += ' order by '
+				valStr += `${connection.escapeId(condition['orderField'])} `
+			}
+			 
+			if (condition['start'] >= 0 && condition['pageCount']) {
+				valStr += ` limit  ${condition['start']},${condition['end']}`
+			}
+			var data = [];
+
+			connection.query(
+				valStr,
+				function (error, results, field) {
+					resolve(results)
+				}
+			)
+			connection.release()
+
+		})
+	})
+
+}
+
+async function getResRecursive(condition, resArray) {
+
+	resArray = await selectOne(condition)
+	if (resArray.length > 0) {
+		for (var i = 0; i < resArray.length; i++) {
+			resArray[i].children = new Array()
+ 			condition['{__PPRIMARY_KEY__}'] = resArray[i].{__PRIMARY_KEY__}
+			var res = await getResRecursive(condition, resArray[i].children)
+			resArray[i].children = res
+		}
+	}
+	return resArray
+}
+Sys{__TABLE_ALIAS_NAME__}Service.selectAll = async function (condition, cb) {
+	var result = new Array()
+	result = await getResRecursive(condition, [])
+	cb(result)
+}
+{__END_IF__}
+
+{__IF_NORECURISION__}//不需要递归
+Sys{__TABLE_ALIAS_NAME__}Service.selectAll = function (
+	condition,
+	cb
+) {
+	pool.getConnection(function (err, connection) {
+		if (err) {
+			throw err
+		}
+		var valStr = 'select ' + includeList + ' from {__TABLE_NAME__} where 1=1'
+		for (var key in condition) {
+			if (fields.indexOf(key) != -1 &&  condition[key]) {
+				valStr += ` and ${connection.escapeId(key)} = ${connection.escape(condition[key])}`;
+			}
+		}
+
+
+			if (condition['keyword'] && condition['field']) {
+				valStr += ` and  instr(${connection.escapeId(condition['field'])},${connection.escape(condition['keyword'])})`
+			}
+			
+	
+
+		if (condition['orderField']) {
+			valStr += ' order by '
+			valStr += `${connection.escapeId(condition['orderField'])} `
+		}
+		 
+		if (condition['start'] >= 0  && condition['pageCount']) {
+			valStr += ` limit ${condition['start']},${condition['end']}`
+		}
+		connection.query(
+			valStr,
+			function (error, results, field) {
+
+				cb(error || results)
+			}
+		)
+		connection.release()
+
+	})
+}
+{__END_IF__}
+
+//增
+
+Sys{__TABLE_ALIAS_NAME__}Service.insert = function (condition,
+	cb) {
+	pool.getConnection(function (err, connection) {
+		if (err) {
+			throw err
+		}
+		var keys = [], values = [], sql = ''
+		for (var i = 0 ; i<fields.length;i++) {
+			//{__PRIMARY_KEY__}
+			keys.push(connection.escapeId(fields[i]))
+			if(fields[i] == '{__PRIMARY_KEY__}'){
+				values.push(connection.escape(uuid.v1().replace(/-/g,'')))
+			}
+			else if(condition[fields[i]]){
+				values.push(connection.escape(condition[fields[i]]))
+			}else{
+				values.push(null)
+			}
+			
+		}
+
+		if (keys.length > 0 && values.length > 0) {
+			sql = 'insert into {__TABLE_NAME__}('
+			sql += keys.join(',')
+			sql += ')'
+			sql += 'values('
+			sql += values.join(',')
+			sql += ')'
+		}
+		if (sql != '') {
+			console.log(sql)
+			connection.query(sql, function (error, results, field) {
+				cb(error || ('插入成功changed ' + results.insertId + ' rows'))
+			})
+			connection.release()
+		}
+
+	})
+}
+
+//删
+
+Sys{__TABLE_ALIAS_NAME__}Service.deleteById = function (condition, cb) {
+	pool.getConnection(function (err, connection) {
+		if (err) {
+			throw err
+		}
+		var sql = 'delete from {__TABLE_NAME__} where {__PRIMARY_KEY__} = ?'
+		var query = connection.query(sql, [condition['{__PRIMARY_KEY__}']], function (error, results, field) {
+			cb(error || ('删除成功delete ' + results.affectedRows + ' rows'))
+		})
+		console.log(query.sql)
+		connection.release()
+	})
+}
+
+//改
+
+Sys{__TABLE_ALIAS_NAME__}Service.updateById = function (condition, cb) {
+	pool.getConnection(function (err, connection) {
+		if (err) {
+			throw err
+		}
+		var keys = [], values = [], sql = ''
+		for (var key in condition) {
+			if(fields.indexOf(key)!=-1 && condition[key]){
+			keys.push(key)
+			}
+		}
+
+		if (keys.length > 0) {
+			sql = 'update {__TABLE_NAME__} set '
+			for (var i = 0; i < keys.length; i++) {
+
+				if (keys[i] != '{__PRIMARY_KEY__}') {
+					sql += keys[i] + ' = ? ,'
+					values.push(condition[keys[i]])
+				}
+			}
+			if (sql.indexOf(',') != -1) {
+				sql = sql.substring(0, sql.length - 1)
+			}
+			sql += 'where {__PRIMARY_KEY__} = ?'
+			values.push(condition['{__PRIMARY_KEY__}'])
+		}
+		if (sql != '') {
+			var query = connection.query(sql, values, function (error, results, field) {
+
+				cb(error || ('更新成功changed ' + results.changedRows + ' rows'))
+			})
+			console.log(query.sql)
+			connection.release()
+		}
+
+
+	})
+}
+
+//查询总的个数
+Sys{__TABLE_ALIAS_NAME__}Service.count = function (
+	condition,
+	cb
+) {
+	pool.getConnection(function (err, connection) {
+		if (err) {
+			throw err
+		}
+		var valStr = 'select count(*) as sum from {__TABLE_NAME__} where 1=1'
+		for (var key in condition) {
+			if (fields.indexOf(key) != -1 && condition[key]) {
+				valStr += ` and ${connection.escapeId(key)} = ${connection.escape(condition[key])}`;
+			}
+		}
+		if (condition['keyword'] && condition['field']) {
+				valStr += ` and  instr(${connection.escapeId(condition['field'])},${connection.escape(condition['keyword'])})`
+			} 
+		connection.query(
+			valStr,
+			function (error, results, field) {
+
+				cb(error || results)
+			}
+		)
+		connection.release()
+	})
+}
+
+{__IF_PAGINATION__}//需要分页
+//主要是用于分页
+Sys{__TABLE_ALIAS_NAME__}Service.PagerBean = {}
+var pageData = {
+	 
+		/**
+	 * 当前页码
+	 */
+		pageNumber : 1,
+		/**
+         * 总页数
+         */
+		 pageCount : 0,
+		/**
+         * 每页记录数
+         */
+		 pageSize : 10,
+		/**
+         * 总记录数
+         */
+		 recordCount : 0,
+		/**
+         * 查询起始
+         */
+		 start : 0,
+		/**
+         * 查询截止
+         */
+		 end : 0,
+		/**
+         * 查询关键字
+         */
+		 keyword : null,
+		/**
+         * 查询字段
+         */
+		field : null,
+		/**
+         * 排序字段
+         */
+		 orderField : null,
+		/**
+         * 升序还是降序
+         */
+		 sc : 'asc',
+		 setData : function(recordCount) {
+
+		this.recordCount = recordCount
+
+		this.start = (this.pageNumber - 1) * this.pageSize
+
+		this.end = this.pageSize
+
+		this.pageCount = Math.ceil(recordCount / this.pageSize)
+
+		if (recordCount % this.pageSize != 0) {
+			this.pageCount++
+		}
+		if (this.pageNumber > this.pageCount) {
+			this.pageNumber = this.pageCount
+		}
+	}
+}
+var  PagerBean  = Sys{__TABLE_ALIAS_NAME__}Service.PagerBean
+
+function getGetAndSet(source,key){  
+	var proxy = {}
+	
+	if(typeof source[key] == "function"){
+	proxy.enumerable = false
+	proxy.writeable = false
+	proxy.get = function(){
+		return source[key]
+	}
+	}else{
+	proxy.enumerable = true
+	proxy.get = function(){
+		if(/^\d+$/g.test(source[key])){
+		return source[key] - 0
+		}else{
+			return source[key]
+		}
+	}
+	proxy.set = function(val){
+		source[key] = val
+	}
+	}
+	return proxy
+}
+    for(var key in pageData){
+		Object.defineProperty(PagerBean,key,getGetAndSet(pageData, key))
+	}
+
+	 
+{__END_IF__}
+
+module.exports = Sys{__TABLE_ALIAS_NAME__}Service

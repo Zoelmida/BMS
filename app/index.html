@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>欢迎来到bms管理系统</title>
+	</head>
+	<body>
+		<script type="text/x-template" id="left-menu-template">
+   <el-submenu :index="allindex"  v-if="menu.children&&menu.children.length" :allindex="allindex">
+   	<template slot="title"><i :class="menu.icon"></i>
+        	 <span> {{menu.menuName}} </span>
+    </template>
+     <bmsmenu v-for="(menu,index) in menu.children" :menu="menu" :index="allindex+'-'+(index+1)" :allindex="allindex+'-'+(index+1)" :key="allindex+'-'+(index+1)">
+             
+     </bmsmenu>
+   </el-submenu>
+   <el-menu-item :index="menu.url" v-else-if="!menu.children||!menu.children.length" :allindex="allindex" :id="WebRootUrl+menu.url" :name="menu.menuName">
+   	<i :class="menu.icon">
+   </i><span>{{menu.menuName}}</span>
+    </el-menu-item>
+</script>
+		<div id="app" style="width: 100%;height: 100%;">  
+ 		</div>
+	</body>
+</html>

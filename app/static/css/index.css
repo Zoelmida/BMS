@@ -1,0 +1,141 @@
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family:"微软雅黑";
+}
+#container{
+	height:100%;
+}
+:root{
+	--leftMenu:180px;
+	--head:60px;
+	--foot:30px;
+}
+
+#container{
+	background:linear-gradient(to bottom,#4CAF50,#009688);
+	height: 100%;
+	background-repeat:no-repeat;
+	background-attachment: fixed;
+	 
+}
+
+img{
+	max-height: 100%;
+	max-width: 100%;
+}
+#showWelcome{
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	background: linear-gradient(to bottom,darkorchid,purple);
+	opacity: 0.6;
+	display: flex;
+	justify-content: center; 
+}
+#head{
+	
+	justify-content: space-between;
+	width: 100%;
+	
+	padding:0px;
+	 
+	
+}
+#container{
+	width: 100%; 
+	height:100%;
+}
+#app{
+	width: 100%; 
+	height:100%;
+}
+#content{
+	 
+	width:calc(100% - 180px);
+	height: 100%;
+	background:#ffffff;
+	float:left;
+}
+#foot{
+	width: 100%;
+	
+	background:#dcd8d3;
+}
+#leftmenu{
+	width: 180px;
+	height: 100%; 
+	float:left;
+	background: linear-gradient(to bottom,#ccd0c5 0%,#437496 100%);
+	overflow-y:hidden;
+	overflow-x:hidden; 
+	position: relative;  
+}
+#center{
+	width:100%;
+	float:left;
+	height:100%;
+	margin:0 auto;
+	padding: 0;
+	padding-left:180px;
+    position:relative;
+}
+#indexFrame{
+	width:100%;
+	height:100%; 
+}
+#myframe{
+	width:100%;
+	
+}
+#tabsPage{
+	height:100%;
+	width:90%;
+} 
+#someOperate{
+   height:100%;
+   width:10%;
+   float:left;
+}
+#editPerson{
+   height:100%;
+   width:10%;
+   float:left;
+}
+/**
+*响应式布局开始
+*
+*
+*/
+@media screen and (max-width: 768px){
+	#head{
+	   display:none;
+	}
+	#foot{
+	   display:none;
+	}
+	#myframe{
+	   height:100%;
+	}
+}
+@media screen and (min-width: 768px){
+	#head{
+	display: flex;
+	  height: 60px;
+	}
+	#foot{
+	display: flex;
+	flex-direction: column-reverse;
+	justify-content: center;
+	height: 30px;
+	}
+	#myframe{
+	 height:calc(100% - 90px);
+	}
+}
+/**
+*响应式布局结束
+*
+*
+*/

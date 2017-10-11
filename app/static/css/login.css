@@ -1,0 +1,29 @@
+body{
+	display:flex;
+	justify-content:center;
+	height: 100%;
+	align-items:center;
+}
+.login-container {
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    background-clip: padding-box;
+   	margin: 0 auto; 
+    width: 350px;
+    padding: 35px 35px 15px 35px;
+    background: #fff;
+    border: 1px solid #eaeaea;
+    box-shadow: 0 0 25px #cac6c6;
+}
+.title {
+    margin: 0px auto 40px auto;
+    text-align: center;
+    color: #505458;
+  }
+.imgCode{
+	 width: 105px;
+	 height: 38px;
+	 margin-left: 10px;
+	 cursor:pointer;
+}
