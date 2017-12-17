@@ -1,9 +1,12 @@
 # **BMS** 
 
-#### BMS基础管理系统 nodejs 版本。系统是一个单页SPA应用，分为前后端。  前端采用了 element-UI,Vue框架, 后端是nodejs，借鉴了java的的文件结构，既DAO+controller形式。数据库用的是mysql。本系统扩展性极强，如果你想增加某个菜单，请先在数据库里增加一个表，然后运行系统目录的配套自动生成工具genAppAndDao，即可自动生成DAO+CONTROLLER层，实现了对数据的增删改查功能。如果想要添加更多功能，请自行在对应的文件增加功能。
+> ## BMS系统是基于vue开发的一套cms系统。
+> ### 前端：Vue、Vuex、Vue-router、ELEMENT-UI 
+> ### 后端：nodejs、express
+
+> ## 项目架构图：
 
 ```
-项目架构图：
     bms
     |--.vscode
     |    |--launch.json
@@ -26,10 +29,23 @@
     |--.gitignore
     |......
 ```
+> ## 登陆界面如下：
+
+### 登陆页
+![login](https://github.com/wangyi7099/pictureCdn/blob/master/allPic/bms/login.jpg?raw=true)
+### 主页
+![index](https://github.com/wangyi7099/pictureCdn/blob/master/allPic/bms/index.jpg?raw=true)
+### 权限赋予
+![rightGiven](https://github.com/wangyi7099/pictureCdn/blob/master/allPic/bms/rightGiven.jpg?raw=true)
+### 角色管理
+![roleManage](https://github.com/wangyi7099/pictureCdn/blob/master/allPic/bms/roleManage.jpg?raw=true)
+### 用户管理
+![userManage](https://github.com/wangyi7099/pictureCdn/blob/master/allPic/bms/userManage.jpg?raw=true)
+### 菜单管理
+![menuManage](https://github.com/wangyi7099/pictureCdn/blob/master/allPic/bms/menuManage.jpg?raw=true)
+
 项目启动方式：
 ====
-    * 从npm上下载包。建议用淘宝的cnpm。 运行命令 cnpm install
-    * 运行npm run start即可
-
-    如有bug和疑点请+QQ群 667358564   欢迎一起讨论。
-   
+    * 首先乣从npm上下载依赖包。建议把registry设置成淘宝的registry，命令：```npm set registry https://registry.npm.taobao.org``` 
+    * 运行命令 ```npm install```
+    * 运行npm run dev即可
