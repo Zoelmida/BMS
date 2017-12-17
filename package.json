@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://git.oschina.net/yaoliguo/bms.git"
+    "url": "git+https://github.com/wangyi7099/BMS.git"
   },
-  "author": "",
+  "author": "wangyi7099",
   "license": "ISC",
   "bugs": {
-    "url": "https://git.oschina.net/yaoliguo/bms/issues"
+    "url": "https://github.com/wangyi7099/bms/issues"
   },
-  "homepage": "https://git.oschina.net/yaoliguo/bms/blob/master/README.md",
+  "homepage": "https://github.com/wangyi7099/BMS/blob/master/README.md",
   "devDependencies": {
     "axios": "^0.16.2",
     "babel-core": "^6.26.0",
