@@ -45,6 +45,6 @@
 ![menuManage](https://github.com/wangyi7099/pictureCdn/blob/master/allPic/bms/menuManage.jpg?raw=true)
 
 > ## 项目启动方式：
-    * 首先乣从npm上下载依赖包。建议把registry设置成淘宝的registry，命令：```npm set registry https://registry.npm.taobao.org``` 
-    * 运行命令 ```npm install```
-    * 运行npm run dev,然后访问8888端口即可.
+* 首先乣从npm上下载依赖包。建议把registry设置成淘宝的registry，命令：```npm set registry https://registry.npm.taobao.org``` 
+* 运行命令 ```npm install```
+* 运行npm run dev,然后访问8888端口即可.
